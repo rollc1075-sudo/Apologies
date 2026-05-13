@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Deeply Sincere Apology | Reflection Journal</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nothing+You+Could+Do&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+        /* CSS ARCHITECTURE 
+           ----------------
+           Defining the root variables and base styling 
+        */
+        :root {
+            --notebook-lines: #c2e1f5;
+            --notebook-margin: #ffacac;
+            --page-color: #fdfdfd;
+            --ink-color: #2c3e50;
+            --secondary-ink: #7f8c8d;
+            --spine-color: #7d6b59;
+            --cover-color: #1a252f; /* Darkened for a proper cover look */
+            --flip-duration: 1.2s;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #d7ccc8; /* Desk surface color */
+            background-image: 
+                radial-gradient(circle at 2px 2px, rgba(0,0,0,0.05) 1px, transparent 0);
+            background-size: 40px 40px;
+            font-family: 'Patrick Hand', cursive;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--ink-color);
+            perspective: 2000px; /* Enhanced 3D depth */
+            overflow: hidden;
+        }
+
+        /* NOTEBOOK CONTAINER
+           The main 3D wrapper 
+        */
+        .notebook-wrapper {
+            width: 95%;
+            max-width: 580px;
+            height: 700px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+
+   .notebook {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    overflow: hidden; /* <--- THIS CLIPS THE BLACK BOX */
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.2);
+}
+
+        /* DECORATIVE SPIRAL 
+        */
+        .spiral-binder {
+            position: absolute;
+            left: -15px;
+            top: 40px;
+            width: 30px;
+            height: 580px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        
+        .binder-ring {
+            width: 35px;
+            height: 12px;
+            background: linear-gradient(to bottom, #bdc3c7, #7f8c8d, #34495e);
+            border-radius: 10px;
+            box-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+            margin-bottom: 5px;
+        }
+
+        /* PAGE STYLING 
+        */
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: var(--page-color);
+            padding: 60px 50px 50px 90px;
+            transform-origin: left;
+            transition: transform var(--flip-duration) cubic-bezier(0.645, 0.045, 0.355, 1);
+            backface-visibility: hidden;
+            z-index: 1;
+            box-shadow: inset 60px 0 40px -40px rgba(0,0,0,0.1), 5px 5px 15px rgba(0,0,0,0.1);
+            border-radius: 0 10px 10px 0;
+            /* Lined paper effect */
+            background-image: 
+                linear-gradient(var(--notebook-lines) 1px, transparent 1px);
+            background-size: 100% 2rem;
+            line-height: 2rem;
+        }
+
+        /* Red margin line on pages */
+        .page::before {
+            content: '';
+            position: absolute;
+            left: 75px;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background-color: var(--notebook-margin);
+            opacity: 0.7;
+        }
+
+        /* COVER OVERRIDES 
+           This section removes the lines and margin specifically from the cover
+        */
+        #cover {
+            background-color: var(--cover-color) !important;
+            background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0) !important;
+            background-size: 20px 20px !important;
+            color: #ffffff !important;
+            border-left: 15px solid #000;
+        }
+
+        #cover::before {
+            display: none !important; /* Removes the red margin line from the cover */
+        }
+
+        /* Flip state for all pages */
+        .page.flipped {
+            transform: rotateY(-175deg);
+            z-index: 0 !important;
+        }
+
+        /* Stacking Logic */
+        #cover { z-index: 10; }
+        #page1 { z-index: 9; }
+        #page2 { z-index: 8; }
+        #page3 { z-index: 7; }
+        #page4 { z-index: 6; } 
+        #page5 { z-index: 5; } 
+        #back-cover { z-index: 1; background-color: var(--spine-color); background-image: none; }
+
+        /* Cover Title Styling */
+        #cover h1 {
+            font-family: 'Nothing You Could Do', cursive;
+            font-size: 3.5rem;
+            text-align: center;
+            margin-top: 150px;
+            text-shadow: 2px 4px 8px rgba(0,0,0,0.6);
+            color: #f1c40f; /* Gold color for the title on dark background */
+            border-bottom: none;
+        }
+
+        #cover .cover-subtitle {
+            text-align: center;
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-top: 20px;
+            color: #ecf0f1;
+        }
+
+        /* Typography & Content */
+        h2 {
+            font-family: 'Nothing You Could Do', cursive;
+            font-size: 2rem;
+            margin-top: 0;
+            border-bottom: 2px solid var(--secondary-ink);
+            padding-bottom: 10px;
+            color: #1a252f;
+        }
+
+        p {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            text-align: justify;
+        }
+
+        .crossed-out {
+            text-decoration: line-through;
+            color: var(--secondary-ink);
+            opacity: 0.6;
+        }
+
+        .highlight {
+            background-color: rgba(255, 235, 59, 0.3);
+            padding: 0 5px;
+            border-radius: 3px;
+        }
+
+        /* MUSIC INTERFACE 
+        */
+        .music-widget {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 5000;
+            background: rgba(255,255,255,0.9);
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid #ddd;
+        }
+
+        .music-visualizer {
+            display: flex;
+            gap: 3px;
+            height: 20px;
+            align-items: flex-end;
+        }
+
+        .bar {
+            width: 3px;
+            background: var(--spine-color);
+            height: 5px;
+            animation: none;
+        }
+
+        .playing .bar {
+            animation: wave 1s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { height: 5px; }
+            50% { height: 20px; }
+        }
+
+        .music-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0;
+        }
+
+        /* NAVIGATION BUTTONS 
+        */
+        .btn-container {
+            position: absolute;
+            bottom: 40px;
+            right: 50px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: #fff;
+            border: 1.5px solid var(--secondary-ink);
+            padding: 8px 20px;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            box-shadow: 2px 2px 0 var(--secondary-ink);
+        }
+
+        .nav-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0 var(--secondary-ink);
+            background-color: #f8f9fa;
+        }
+
+        .nav-btn:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0 var(--secondary-ink);
+        }
+
+        .prev-btn {
+            right: auto;
+            left: 90px;
+        }
+/* 3. Ensure the text has room at the bottom so it doesn't hit the cat */
+#page5 p:last-of-type {
+    margin-bottom: 120px; 
+}
+        @keyframes cat-float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        /* Sticky Note */
+        .sticky {
+            background-color: #ffeb3b;
+            padding: 15px;
+            width: 140px;
+            position: absolute;
+            top: 40px;
+            right: -20px;
+            transform: rotate(10deg);
+            box-shadow: 5px 5px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+            font-size: 0.9rem;
+            line-height: 1.2rem;
+            border-bottom-right-radius: 30px 5px;
+            color: #000;
+        }
+
+        /* AUTOPLAY OVERLAY 
+        */
+        #interaction-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.01);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .prompt-text {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            font-family: sans-serif;
+            font-size: 0.8rem;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        /* Container for the scrollable text */
+.content-scroll {
+    max-height: 420px; /* Limits height so buttons stay at the bottom */
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-bottom: 20px;
+    /* Custom thin scrollbar for a clean look */
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary-ink) transparent;
+}
+
+/* Scrollbar styling for Chrome/Edge/Safari */
+.content-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+.content-scroll::-webkit-scrollbar-thumb {
+    background-color: var(--secondary-ink);
+    border-radius: 10px;
+}
+
+/* IMPORTANT: This fixes the 'black box' issue from your screenshot */
+.notebook {
+    overflow: hidden !important; 
+}
+
+       </style>
+    </head>
+<body id="main-body">
+
+    <div id="interaction-overlay">
+        <div class="prompt-text">Click anywhere to open the journal</div>
+    </div>
+
+    <div class="music-widget">
+        <div class="music-visualizer" id="visualizer">
+            <div class="bar" style="animation-delay: 0.1s;"></div>
+            <div class="bar" style="animation-delay: 0.3s;"></div>
+            <div class="bar" style="animation-delay: 0.2s;"></div>
+            <div class="bar" style="animation-delay: 0.4s;"></div>
+        </div>
+        <button class="music-btn" id="music-toggle">▶</button>
+        <span style="font-size: 0.7rem; opacity: 0.6;">Music On</span>
+    </div>
+
+    <audio id="audio-track" loop>
+        <source src="free.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="sfx-beep" preload="auto">
+        <source src="Page.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="notebook-wrapper">
+        
+        <div class="spiral-binder">
+            <div class="binder-ring"></div><div class="binder-ring"></div>
+            <div class="binder-ring"></div><div class="binder-ring"></div>
+            <div class="binder-ring"></div><div class="binder-ring"></div>
+            <div class="binder-ring"></div><div class="binder-ring"></div>
+            <div class="binder-ring"></div><div class="binder-ring"></div>
+        </div>
+
+        <div class="notebook">
+            
+            <div class="page" id="cover">
+                <div class="sticky">I'm so sorry. Please read this.</div>
+                <h1>For You.</h1>
+                <div class="cover-subtitle">From a chutiya who's learning...</div>
+                
+                <div class="btn-container">
+                    <button class="nav-btn" onclick="flipPage('cover', true)">Open Journal &rarr;</button>
+                </div>
+            </div>
+
+            <div class="page" id="page1">
+                <h2>Day 1: Silence.</h2>
+                <p>It’s been two days since we last talked properly. Two days of sitting with everything you said in that message. I’ve read it a dozen times, and every time, it hits me harder how much I messed up.</p>
+                <p>I was so focused on my own point of view that I called your efforts <span class="highlight">"ignoring"</span>. How stupid could I be? You stayed up until <span class="highlight">4 AM</span> to chat with me. That’s not ignoring—that’s caring.</p>
+                <p>I took your time and your energy for granted. I'm sorry for being so blind to what you were actually doing for this friendship.</p>
+                
+                <div class="btn-container">
+                    <button class="nav-btn" onclick="flipPage('cover', false)">&larr; Back</button>
+                    <button class="nav-btn" onclick="flipPage('page1', true)">Next Page &rarr;</button>
+                </div>
+            </div>
+
+            <div class="page" id="page2">
+                <h2>Day 2: The Mistakes.</h2>
+                <p>You mentioned the notes—the 10 pages of negativity. Thinking back, I can't believe I actually wrote all that. I was acting out of my own mood, but that’s no excuse to be toxic to a friend who has been nothing but supportive.</p>
+                <p>You said I made you feel like a <span class="highlight">"servant"</span>. That broke my heart to read, because it's true. I was demanding your time as if I owned it. You are my friend, my equal, and I should have treated you with that respect from the start.</p>
+                <p>I'm sorry for making a "treat" or a "game" feel like a chore for you. It should have been fun, not a job.</p>
+                
+                <div class="btn-container">
+                    <button class="nav-btn prev-btn" onclick="flipPage('page1', false)">&larr; Back</button>
+                    <button class="nav-btn" onclick="flipPage('page2', true)">Next Page &rarr;</button>
+                </div>
+            </div>
+
+           <div id="page3" class="page">
+    <h2>Day 3: The Pressure.</h2>
+    <p>I realized I was making everything about what *I* wanted. Whether it was asking for screen shares or suggesting u go get ice cream, I didn't thought if you actually wanted to do those things..sorry to feel u like i treated u as a naukar</p>
+    <p>I don't ever want you to feel like you have to give me "updates" on your day just to avoid a fight. That’s not a friendship; I want you to talk to me only if you <span class="highlight">want</span> to, not because you feel like you have to.</p>
+    
+    <div class="btn-container">
+        <button class="nav-btn prev-btn" onclick="flipPage('page2', false)">&larr; Back</button>
+        <button class="nav-btn" onclick="flipPage('page3', true)">Next Page &rarr;</button>
+    </div>
+</div>
+
+<div id="page4" class="page">
+    <div class="content-scroll">
+    <h2>Day 4: Final Msg.</h2>
+<p>मी तुझा संपूर्ण संदेश काळजीपूर्वक वाचला आणि सर्व गोष्टींचा सखोल विचार केल्यानंतर 🥲, मला याची जाणीव झाली की मी तुला किती दुखावले आहे.</p>
+<p>तुझे म्हणणे अगदी बरोबर आहे. 🙃</p>
+<p>मी अशा काही गोष्टी बोललो आणि केल्या, ज्या पूर्णपणे अन्यायकारक आणि असंवेदनशील होत्या. 😥😥</p>
+<p>तू माझ्याकडे दुर्लक्ष करत आहेस असा आरोप करणे, सतत प्रत्येक गोष्टीची माहिती मिळण्याची अपेक्षा करणे, क्षुल्लक गोष्टींवरून चिडणे आणि तुझे प्रयत्न काहीच महत्त्वाचे नाहीत असे तुला वाटायला लावणे — हे सर्व चुकीचे होते.</p>
+<p>माझी सर्वात मोठी चूक म्हणजे तुझ्याबद्दल त्या लांबलचक नोंदी लिहून ठेवणे ही होती.🤐</p>
+<p>मी कितीही रागात किंवा हताश असलो, तरीही माझ्याबद्दल काळजी घेणाऱ्या आणि माझ्याशी बोलण्यासाठी पहाटे ४ वाजेपर्यंत जागणाऱ्या व्यक्तीबद्दल अशा दुखावणाऱ्या गोष्टी लिहिण्याचा मला कोणताही अधिकार नव्हता.</p>
+<p>आता जेव्हा मी त्याबद्दल विचार करतो, तेव्हा मला समजते की त्या गोष्टींमुळे तुला इतके खोलवर दुःख का झाले. 😅💔</p>
+<p>आणि तुझे म्हणणेही अगदी बरोबर आहे की, जर मी त्याच चुका पुन्हा पुन्हा करत राहिलो, तर वारंवार 'सॉरी' म्हणण्याला काहीच अर्थ उरत नाही.🔁😔</p>
+<p>तू माझ्याकडे कधीच दुर्लक्ष करत नव्हतीस.</p>
+<p>तू मला तुझा वेळ, तुझे लक्ष आणि तुझी काळजी देत होतीस.</p>
+<p>त्या गोष्टींचे कौतुक करण्याऐवजी, तुझे प्रयत्न काहीच महत्त्वाचे नाहीत असे मी तुला वाटायला लावले. 🤝✨</p>
+<p>ते किती अपमानकारक आणि मानसिकदृष्ट्या किती थकवणारे ठरले असेल, याची मला आता जाणीव झाली आहे. 🙏</p>
+<p>जर मी त्याच चुका पुन्हा करत राहिलो, तर वारंवार 'सॉरी' म्हणण्याला काहीच अर्थ उरत नाही.</p>
+<p>खऱ्या माफीसोबत वर्तणुकीत बदल होणे अपेक्षित असते, आणि नेमके हेच मला आता करायचे आहे.</p>
+<p>तुला दुखावल्याबद्दल, तुझा मूड खराब केल्याबद्दल आणि तुला अपमानित वाटायला लावल्याबद्दल मी मनापासून दिलगीर आहे.</p>
+<p>यापैकी कशाचीही तू पात्र नव्हतीस. 🥺</p>
+<p>माझ्या बालिशपणामुळे आणि अति-विचारांमुळे आपल्या नात्यातील हे सुंदर बंध मला गमावायचे नाहीत.</p>
+<p>मी तुला लगेचच माफ कर अशी विनंती करत नाहीये.</p>
+<p>तुला हवा तितका वेळ तू घेऊ शकतेस.</p>
+<p>मला फक्त तुला हे सांगायचे होते की मला माझ्या चुकांची जाणीव झाली आहे.😔💭</p>
+<p>त्याबद्दल मला मनापासून पश्चात्ताप होत आहे.</p>
+<p>माझ्या वर्तणुकीत सुधारणा करण्यासाठी मी नक्कीच प्रयत्न करेन.</p>
+<p>तू रागात असतानाही माझ्याशी इतक्या प्रामाणिकपणे बोलल्याबद्दल तुझे आभार.💖</p>
+<p>मी आजवर व्यक्त केले आहे त्यापेक्षाही माझ्यासाठी तुझे महत्त्व कितीतरी अधिक आहे. </p>
+<p>I m Sorry 😖🤞.</p>
+    
+    <div class="btn-container">
+        <button class="nav-btn prev-btn" onclick="flipPage('page3', false)">&larr; Back</button>
+        <button class="nav-btn" onclick="flipPage('page4', true)">Next Page &rarr;</button>
+    </div>
+</div>
+</div>
+
+  
+
+<div id="page5" class="page">
+    <h2>Day 5: The Final Word.</h2>
+   <p>I was looking through our old chats and the projects we worked on. It reminded me of why I value this friendship so much. You’ve always been someone I could talk to about anything, and I hate that I turned that into something stressful for you.</p>
+    <p>I realize now that the <span class="highlight">4 AM</span> conversations weren't just "time spent"—they were moments where you were being a real friend. I promise never to treat your presence as a given ever again.</p>
+    <p>I’m done with the excuses and the "sry sry" texts that don't mean anything. From now on, I want my actions to speak louder. I want to be the friend who supports you, not the one who adds to your stress.</p>
+    <p>If you're reading this, just know I'm ready to listen whenever you're ready to talk. No pressure, no updates required. Just us.</p>
+
+
+    <div class="btn-container">
+        <button class="nav-btn prev-btn" onclick="flipPage('page4', false)">&larr; Back</button>
+    </div>
+</div>
+
+        </div> </div> <script>
+        /* CORE LOGIC 
+           ----------
+           Handling page flips and audio playback
+        */
+
+        const audio = document.getElementById('audio-track');
+        const musicBtn = document.getElementById('music-toggle');
+        const visualizer = document.getElementById('visualizer');
+        const overlay = document.getElementById('interaction-overlay');
+        let musicPlaying = false;
+
+        // Autoplay Workaround: Starts music on first click
+        overlay.addEventListener('click', () => {
+            overlay.style.display = 'none';
+            toggleMusic(true);
+        });
+
+        // Toggle Music Function
+        function toggleMusic(forcePlay = false) {
+            if (!musicPlaying || forcePlay) {
+                audio.play().then(() => {
+                    musicPlaying = true;
+                    musicBtn.innerText = "||";
+                    visualizer.classList.add('playing');
+                }).catch(err => console.log("Audio play failed: ", err));
+            } else {
+                audio.pause();
+                musicPlaying = false;
+                musicBtn.innerText = "▶";
+                visualizer.classList.remove('playing');
+            }
+        }
+
+        musicBtn.addEventListener('click', () => toggleMusic());
+
+        // Page Flip Function
+        function flipPage(pageId, forward) {
+            const page = document.getElementById(pageId);
+            
+            if (forward) {
+                page.classList.add('flipped');
+            } else {
+                page.classList.remove('flipped');
+            }
+            
+            // Interaction trigger to ensure music starts if not already
+            if (!musicPlaying) toggleMusic(true);
+        }
+
+        /* ADDITIONAL RECHECKS 
+           Ensuring stacking z-index works during transition
+        */
+        const allPages = document.querySelectorAll('.page');
+        allPages.forEach(page => {
+            page.addEventListener('transitionend', () => {
+                if (page.classList.contains('flipped')) {
+                    page.style.pointerEvents = 'none';
+                } else {
+                    page.style.pointerEvents = 'auto';
+                }
+            });
+        });
+
+        function flipPage(pageId, forward) {
+    // 1. Get the sound element
+    const sfx = document.getElementById('sfx-beep');
+    
+    // 2. Reset and Play the sound
+    sfx.currentTime = 0; 
+    sfx.play().catch(e => console.log("SFX play failed."));
+
+    // 3. Your existing flip logic...
+    const page = document.getElementById(pageId);
+    if (forward) {
+        page.classList.add('flipped');
+    } else {
+        page.classList.remove('flipped');
+    }
+    
+    if (!musicPlaying) toggleMusic(true);
+}
+    </script>
+</body>
+</html>
