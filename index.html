@@ -365,6 +365,69 @@
     overflow: hidden !important; 
 }
 
+
+    /* --- MOBILE SPECIFIC FIXES --- */
+@media screen and (max-width: 600px) {
+    /* 1. Shrink the notebook height to fit mobile viewports */
+    .notebook-wrapper {
+        height: 85vh; /* Uses 85% of the screen height */
+        width: 92%;
+        max-width: 400px;
+    }
+
+    /* 2. Adjust padding so text doesn't hit the rings or edges */
+    .page {
+        padding: 40px 20px 80px 65px; /* Bottom padding (80px) keeps text clear of buttons */
+        background-size: 100% 1.8rem; /* Matches smaller line height */
+        line-height: 1.8rem;
+    }
+
+    /* 3. Re-align the red margin line for narrow screens */
+    .page::before {
+        left: 55px;
+    }
+
+    /* 4. Shrink headings and text size */
+    #cover h1 { font-size: 2.5rem; margin-top: 100px; }
+    h2 { font-size: 1.6rem; margin-bottom: 10px; }
+    p { font-size: 0.95rem; margin-bottom: 1.2rem; }
+
+    /* 5. FIX THE SCROLL AREA: This prevents the 'text bleed' in your screenshots */
+    .content-scroll {
+        max-height: calc(85vh - 200px); /* Dynamically keeps text above the buttons */
+        padding-bottom: 20px;
+    }
+
+    /* 6. Reposition Navigation Buttons */
+    .btn-container {
+        bottom: 20px;
+        right: 20px;
+        gap: 8px;
+        z-index: 100;
+    }
+
+    .nav-btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+
+    .prev-btn {
+        left: 65px; /* Keeps Back button clear of the spine */
+    }
+
+    /* 7. Adjust the Binder Rings */
+    .spiral-binder {
+        left: -10px;
+        width: 20px;
+        top: 30px;
+        height: 80%;
+    }
+    .binder-ring {
+        width: 25px;
+        height: 8px;
+    }
+}
+
        </style>
     </head>
 <body id="main-body">
@@ -415,6 +478,7 @@
             </div>
 
             <div class="page" id="page1">
+                <div class="content-scroll">
                 <h2>Day 1: Silence.</h2>
                 <p>It’s been two days since we last talked properly. Two days of sitting with everything you said in that message. I’ve read it a dozen times, and every time, it hits me harder how much I messed up.</p>
                 <p>I was so focused on my own point of view that I called your efforts <span class="highlight">"ignoring"</span>. How stupid could I be? You stayed up until <span class="highlight">4 AM</span> to chat with me. That’s not ignoring—that’s caring.</p>
@@ -425,8 +489,10 @@
                     <button class="nav-btn" onclick="flipPage('page1', true)">Next Page &rarr;</button>
                 </div>
             </div>
+            </div>
 
             <div class="page" id="page2">
+                <div class="content-scroll">
                 <h2>Day 2: The Mistakes.</h2>
                 <p>You mentioned the notes—the 10 pages of negativity. Thinking back, I can't believe I actually wrote all that. I was acting out of my own mood, but that’s no excuse to be toxic to a friend who has been nothing but supportive.</p>
                 <p>You said I made you feel like a <span class="highlight">"servant"</span>. That broke my heart to read, because it's true. I was demanding your time as if I owned it. You are my friend, my equal, and I should have treated you with that respect from the start.</p>
@@ -437,8 +503,10 @@
                     <button class="nav-btn" onclick="flipPage('page2', true)">Next Page &rarr;</button>
                 </div>
             </div>
+            </div>
 
            <div id="page3" class="page">
+               <div class="content-scroll">
     <h2>Day 3: The Pressure.</h2>
     <p>I realized I was making everything about what *I* wanted. Whether it was asking for screen shares or suggesting u go get ice cream, I didn't thought if you actually wanted to do those things..sorry to feel u like i treated u as a naukar</p>
     <p>I don't ever want you to feel like you have to give me "updates" on your day just to avoid a fight. That’s not a friendship; I want you to talk to me only if you <span class="highlight">want</span> to, not because you feel like you have to.</p>
@@ -448,6 +516,7 @@
         <button class="nav-btn" onclick="flipPage('page3', true)">Next Page &rarr;</button>
     </div>
 </div>
+           </div>
 
 <div id="page4" class="page">
     <div class="content-scroll">
@@ -488,6 +557,7 @@
   
 
 <div id="page5" class="page">
+    <div class="content-scroll">
     <h2>Day 5: The Final Word.</h2>
    <p>I was looking through our old chats and the projects we worked on. It reminded me of why I value this friendship so much. You’ve always been someone I could talk to about anything, and I hate that I turned that into something stressful for you.</p>
     <p>I realize now that the <span class="highlight">4 AM</span> conversations weren't just "time spent"—they were moments where you were being a real friend. I promise never to treat your presence as a given ever again.</p>
@@ -498,6 +568,7 @@
     <div class="btn-container">
         <button class="nav-btn prev-btn" onclick="flipPage('page4', false)">&larr; Back</button>
     </div>
+</div>
 </div>
 
         </div> </div> <script>
